@@ -11,7 +11,7 @@ from langgraph.graph import END, START, StateGraph
 class State(TypedDict):
     text: str
     word_count: int
-    # TODO (exercise): add a `summary: str` field for your "construct" node
+    summary: str
 
 
 # Nodes = plain functions. They get the whole state, return only what they change.
@@ -25,18 +25,20 @@ def count(state: State):
     return {"word_count": len(state["text"].split())}
 
 
-# TODO (exercise): write `construct(state)` that reads text + word_count
-# and returns {"summary": "..."} e.g. "'hello langgraph world' has 3 words"
+def construct(state: State):
+    print("construct sees:", state)
+    return {"summary": f"'{state['text']}' has {state['word_count']} words"}
 
 
 # Edges = arrows between nodes.
 g = StateGraph(State)
 g.add_node("clean", clean)
 g.add_node("count", count)
+g.add_node("construct", construct)
 g.add_edge(START, "clean")
 g.add_edge("clean", "count")
-g.add_edge("count", END)
-# TODO (exercise): add the construct node and re-wire: count -> construct -> END
+g.add_edge("count", "construct")
+g.add_edge("construct", END)
 
 app = g.compile()
 
