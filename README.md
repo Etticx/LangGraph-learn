@@ -16,4 +16,4 @@ I'm using this repo to get hands-on with building agent workflows, state machine
 
 - Python
 - LangGraph
-- (more as the project grows)
+- Qwen3.5 2B Local LLM
